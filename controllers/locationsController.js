@@ -1,55 +1,55 @@
-var Image = require("../models/image");
+var Location = require("../models/location");
 
-function imagesCreate(req, res) {
-  Image.create(req.body.body, function(err, image){
+function locationsCreate(req, res) {
+  Location.create(req.body.body, function(err, location){
     if (err) return res.status(500).json({ success: false, message: err});
-    if (!image) return res.status(500).json({ success: false, message: "Please provide an image" });
+    if (!location) return res.status(500).json({ success: false, message: "Please provide an location" });
     console.log("req.body",req.body);
-    console.log(image);
-    return res.status(201).json({ image : image});
+    console.log(location);
+    return res.status(201).json({ location : location});
   });
 }
 
-function imagesIndex(req,res){
+function locationsIndex(req,res){
   query = req.query;
   console.log("Query",query);
-  Image.find(query, function(err, images){
+  Location.find(query, function(err, locations){
     if (err) return res.status(500).json({ success: false, message: err});
-    if (!images) return res.status(500).json({ success: false, message: "No Images Found" });
-    return res.status(200).json({ images : images});
+    if (!locations) return res.status(500).json({ success: false, message: "No Locations Found" });
+    return res.status(200).json({ locations : locations});
   })
 }
 
-function imagesShow(req,res){
-  Image.findById(req.params.id, function(err, image){
+function locationsShow(req,res){
+  Location.findById(req.params.id, function(err, location){
     if (err) return res.status(500).json({ success: false, message: err});
-    if (!image) return res.status(500).json({ success: false, message: "No Image Found" });
-    return res.status(200).json({ image : image});
+    if (!location) return res.status(500).json({ success: false, message: "No Location Found" });
+    return res.status(200).json({ location : location});
   })
 }
 
-function imagesUpdate(req,res){
-  Image.findByIdAndUpdate(req.params.id, req.body.image, {new : true}, function(err, image){
+function locationsUpdate(req,res){
+  Location.findByIdAndUpdate(req.params.id, req.body.location, {new : true}, function(err, location){
     if (err) return res.status(500).json({ success: false, message: err});
-    if (!image) return res.status(500).json({ success: false, message: "No Data to Update Found" });
-    return res.status(200).json({ image : image});
+    if (!location) return res.status(500).json({ success: false, message: "No Data to Update Found" });
+    return res.status(200).json({ location : location});
   })
 }
 
-function imagesDelete(req,res){
-  Image.findByIdAndRemove(req.params.id, function(err, image){
+function locationsDelete(req,res){
+  Location.findByIdAndRemove(req.params.id, function(err, location){
     if(err) return res.status(500).json(err);
-    if(!image) return res.status(500).json({ sucess: false, message: "Image does not exist cannot delete"})
+    if(!location) return res.status(500).json({ sucess: false, message: "Location does not exist cannot delete"})
     return res.status(204).send({message: "DELETED"});
   })
 }
 
 
 module.exports = {
-  create: imagesCreate,
-  index: imagesIndex,
-  show: imagesShow,
-  update: imagesUpdate,
-  delete: imagesDelete
+  create: locationsCreate,
+  index: locationsIndex,
+  show: locationsShow,
+  update: locationsUpdate,
+  delete: locationsDelete
 
 };
