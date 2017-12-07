@@ -8,10 +8,11 @@ var locationSchema = mongoose.Schema({
   description: { type: String},
   dateAdded: { type: Date, default: Date.now},
   locationMainImage: {type: String},
+  entryType: {type: String},
   tag: { type: String},
   lat: { type: String},
   long:{ type: String},
-  active:{ type: Boolean}
+  active:{ type: Boolean, default: true}
 },{
 
   timestamps: true
