@@ -29,7 +29,7 @@ function locationsShow(req,res){
 }
 
 function locationsUpdate(req,res){
-  Location.findByIdAndUpdate(req.params.id, req.body.location, {new : true}, function(err, location){
+  Location.findByIdAndUpdate(req.params.id, req.body.body, {new : true}, function(err, location){
     if (err) return res.status(500).json({ success: false, message: err});
     if (!location) return res.status(500).json({ success: false, message: "No Data to Update Found" });
     return res.status(200).json({ location : location});
