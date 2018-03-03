@@ -4,8 +4,8 @@ function locationsCreate(req, res) {
   Location.create(req.body.body, function(err, location){
     if (err) return res.status(500).json({ success: false, message: err});
     if (!location) return res.status(500).json({ success: false, message: "Please provide an location" });
-    console.log("req.body",req.body);
-    console.log(location);
+    console.log("req.body",req.body.body);
+    console.log("location",location);
     return res.status(201).json({ location : location});
   });
 }
