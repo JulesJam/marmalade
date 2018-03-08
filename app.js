@@ -1,5 +1,7 @@
 var express     = require("express");
 var app         = express();
+
+var environment = app.get('env');
 var port        = process.env.PORT || 3000;
 var morgan      = require('morgan');
 var bodyParser  = require('body-parser');
@@ -9,10 +11,16 @@ var routes      = require('./config/routes');
 
 
 
-var databaseUrl = process.env.MONGOLAB_URI || 'mongodb://localhost:27017/photoframeAPI';
+var databaseUrl = process.env.MONGOLAB_URI_MARMALADE || 'mongodb://localhost:27017/locations';
+//Chnage from photoframeAPI
+
+console.log(databaseUrl);
+
 mongoose.connect(databaseUrl, {
   useMongoClient: true
 });
+
+
 
 app.use(morgan('dev'));
 
@@ -26,4 +34,6 @@ app.use('/api', routes);
 
 app.listen(port, function(){
   console.log('listening on port'+port);
-})
+});
+
+module.exports = app
