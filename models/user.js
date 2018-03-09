@@ -1,5 +1,6 @@
 var mongoose = require('mongoose');
 var bcrypt = require('bcrypt');
+var jwt = require('jsonwebtoken');
 var beautifulUnique = require('mongoose-beautiful-unique-validation');
 
 var userSchema = new mongoose.Schema({
@@ -18,7 +19,9 @@ var userSchema = new mongoose.Schema({
   },
   passwordHash: {
     type: String,
-  }
+  },
+   createdAt: { type: Date, default:  Date.now},
+   updatedAt: { type: Date, default: Date.now}
 });
 
 userSchema.set('toJSON', {
@@ -28,6 +31,16 @@ userSchema.set('toJSON', {
     return json;
     }
 });
+
+userSchema.pre("validate", function(next) {
+  if(!this._password) {
+    this.invalidate('password', 'A password is required');
+    console.log("password validation failed");
+  }
+  next();
+});
+
+
 
 
 userSchema.virtual('password')
@@ -57,8 +70,9 @@ userSchema.path('passwordHash')
     }
 });
 
+
 userSchema.methods.validatePassword = function(password) {
-  return bcrypt.compareSync(password, this.password);
+  return bcrypt.compareSync(password, this.passwordHash);
 };
 
 userSchema.plugin(beautifulUnique);
