@@ -2,10 +2,12 @@ var express = require('express');
 var router = express.Router();
 
 var jwt = require('jsonwebtoken');
+
 var secret = process.env.MARMALADE_API_SECRET;
 
 var usersController = require('../controllers/users');
 var authController = require('../controllers/authentications');
+var locationsController = require('../controllers/locationsController');
 
 function secureRoute(req, res, next){
   if(!req.headers.authorization)
@@ -16,15 +18,15 @@ function secureRoute(req, res, next){
 
   jwt.verify(token, secret, function(err, payload){
     if(err|| !payload) return res.status(401).json({
-      message: "Unauthorised"
+      message: "Unauthorised - not logged in server responded " + err
     });
+    
     req.user = payload;
     next();
   });
 }
 
 
-var locationsController = require('../controllers/locationsController');
 
 router.route('/users')
   .all(secureRoute)
@@ -42,6 +44,7 @@ router.post('/register', authController.register);
 router.post('/login', authController.login);
 
 router.route('/locations')
+  .all(secureRoute)
   .post(locationsController.create)
   .get(locationsController.index);
 
