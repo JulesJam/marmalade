@@ -1,10 +1,11 @@
 var Location = require("../models/location");
 
 function locationsCreate(req, res) {
-  Location.create(req.body.body, function(err, location){
+  console.log("Logged In User for post",req.user)
+  Location.create(req.body, function(err, location){
     if (err) return res.status(500).json({ success: false, message: err});
     if (!location) return res.status(500).json({ success: false, message: "Please provide a location" });
-    console.log("req.body",req.body.body);
+    console.log("req.body",req.body);
     console.log("location",location);
     return res.status(201).json({ location : location});
   });
@@ -14,10 +15,10 @@ function locationsIndex(req,res){
   query = req.query;
   console.log("Query",query);
   console.log("Logged In User",req.user);
-  Location.find(query, function(err, locations){
+  Location.find(query, function(err, location){
     if (err) return res.status(500).json({ success: false, message: err});
-    if (!locations) return res.status(500).json({ success: false, message: "No Locations Found" });
-    return res.status(200).json({ locations : locations});
+    if (!location) return res.status(500).json({ success: false, message: "No Locations Found" });
+    return res.status(200).json({ location : location});
   })
 }
 

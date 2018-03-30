@@ -10,6 +10,7 @@ var authController = require('../controllers/authentications');
 var locationsController = require('../controllers/locationsController');
 
 function secureRoute(req, res, next){
+  console.log("Secure route activated req headers",req.headers);
   if(!req.headers.authorization)
     return res.status(401).json({
       message: "Unauthorised"
@@ -45,7 +46,7 @@ router.post('/login', authController.login);
 
 router.route('/locations')
   .all(secureRoute)
-  .post(locationsController.create)
+  .post(locationsController.create, secureRoute)
   .get(locationsController.index);
 
 router.route('/locations/:id')
