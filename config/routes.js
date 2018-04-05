@@ -4,13 +4,14 @@ var router = express.Router();
 var jwt = require('jsonwebtoken');
 
 var secret = process.env.MARMALADE_API_SECRET;
+var upload = require('./upload');
 
 var usersController = require('../controllers/users');
 var authController = require('../controllers/authentications');
 var locationsController = require('../controllers/locationsController');
 
 function secureRoute(req, res, next){
-  console.log("Secure route activated req headers",req.headers);
+  console.log("Secure route activated req body",req.body);
   if(!req.headers.authorization)
     return res.status(401).json({
       message: "Unauthorised"
@@ -46,7 +47,7 @@ router.post('/login', authController.login);
 
 router.route('/locations')
   .all(secureRoute)
-  .post(locationsController.create, secureRoute)
+  .post(upload.single('file'),locationsController.create)
   .get(locationsController.index);
 
 router.route('/locations/:id')

@@ -7,6 +7,7 @@ var locationSchema = mongoose.Schema({
   locationCountry: { type: String, default: "UK"},
   description: { type: String},
   dateAdded: { type: Date, default: Date.now},
+  pictures: [{ type: String, required: true }],
   locationMainImage: {type: String},
   entryType: {type: String},//Restaurant coffee Shop etc
   tag: { type: String},

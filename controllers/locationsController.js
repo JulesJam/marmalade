@@ -1,8 +1,18 @@
 var Location = require("../models/location");
 
 function locationsCreate(req, res) {
-  console.log("Logged In User for post",req.user)
-  Location.create(req.body, function(err, location){
+
+
+
+  newLocation = JSON.parse(req.body.location);
+  console.log("File Key>>>>>>>>>>>",req.file);
+
+  if (req.file && req.file.key){
+      newLocation.locationMainImage = req.file.key
+    }
+  
+
+  Location.create(newLocation, function(err, location){
     if (err) return res.status(500).json({ success: false, message: err});
     if (!location) return res.status(500).json({ success: false, message: "Please provide a location" });
     console.log("req.body",req.body);
