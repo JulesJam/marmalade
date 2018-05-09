@@ -1,9 +1,14 @@
 var mongoose = require('mongoose');
 
 var locationSchema = mongoose.Schema({
+creatorID: { type: mongoose.Schema.ObjectId, ref: "User", /*required: true */},
   locationName: { type: String, /*required: true*/},
   locationTown: { type: String, /*required: true*/},
+  locationAddress: { type: String },
+  locationMainTelephone: { type: String },
   locationPostcode: { type: String},
+  latitude: { type: Number},
+  longitude: { type: Number },
   locationCountry: { type: String, default: "UK"},
   description: { type: String},
   dateAdded: { type: Date, default: Date.now},
