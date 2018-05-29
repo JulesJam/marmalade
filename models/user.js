@@ -20,8 +20,55 @@ var userSchema = new mongoose.Schema({
   passwordHash: {
     type: String,
   },
-   createdAt: { type: Date, default:  Date.now},
-   updatedAt: { type: Date, default: Date.now}
+  contactConsent: {
+    type: Boolean,
+    required: true
+  },
+  contactConsentDateSet: {
+    type: Date,
+    default: Date.now
+  },
+  marketingConsent: {
+    type: Boolean,
+    required: true
+  },
+  marketingConsentDateSet: {
+    type: Date,
+    default: Date.now
+  },
+  inviteCode: {
+    type: String
+  },
+  jarOwnerJarId: {
+    type: mongoose.Schema.ObjectId,
+    ref: "Jar"
+  },
+  primaryJarId: {
+    type: mongoose.Schema.ObjectId,
+    ref: "Jar"
+  },
+  jarMemberships: [{
+    type: mongoose.Schema.ObjectId,
+    ref: "Jar"
+  }],
+  isActivated: {
+    type: Boolean,
+    default: true
+  },
+  visits: [{
+    type: Date,
+    default: Date.now
+  }],
+  freinds: [{
+    type: mongoose.Schema.ObjectId,
+    ref: "User"
+  }],
+  avatar: {
+    type: String
+  },
+
+  createdAt: { type: Date, default:  Date.now},
+  updatedAt: { type: Date, default: Date.now}
 });
 
 userSchema.set('toJSON', {

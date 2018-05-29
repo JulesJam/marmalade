@@ -19,7 +19,9 @@ passport.use(new LocalStrategy({
       return done(null, false, "User details not valid");
      }
 
-     var payload = { _id: user._id, username: user.username };
+    
+
+     var payload = { _id: user._id, firstName: user.firstName, lastName: user.lastName, primaryJarId: "testID12345"};
      var token = jwt.sign(payload, secret, { expiresIn: 60*60*24 });
      console.log("Generating token...",token);
      /*return res.status(200).json({

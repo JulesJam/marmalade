@@ -10,7 +10,7 @@ function register(req, res) {
       message: "Oops those details can't be registered",
       err});
 
-    var payload = { _id: user._id, username: user.username };
+    var payload = { _id: user._id, firstName: user.firstName, lastName: user.lastName, primaryJarId: primaryJarId };
     var token = jwt.sign(payload, secret, { expiresIn: 60*60*24 });
     return res.status(200).json({
       message: "Success",
