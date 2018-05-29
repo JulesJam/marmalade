@@ -11,7 +11,7 @@ function register(req, res) {
       err});
 
     var payload = { _id: user._id, firstName: user.firstName, lastName: user.lastName, primaryJarId: user.primaryJarId };
-    var token = jwt.sign(payload, secret, { expiresIn: 60*60*24 });
+    var token = jwt.sign(payload, secret, { expiresIn: 60*60*2 });
     return res.status(200).json({
       message: "Success",
       token: token

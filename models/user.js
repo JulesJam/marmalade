@@ -59,7 +59,7 @@ var userSchema = new mongoose.Schema({
     type: Date,
     default: Date.now
   }],
-  freinds: [{
+  friends: [{
     type: mongoose.Schema.ObjectId,
     ref: "User"
   }],
