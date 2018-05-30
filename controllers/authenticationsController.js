@@ -1,15 +1,19 @@
 var User = require('../models/user');
 var jwt = require('jsonwebtoken');
 var passport = require('passport');
+var jarCreate = require('../controllers/jarsController')
 var secret = process.env.MARMALADE_API_SECRET;
 
 function register(req, res) {
+  var 
+  date = Date.now();
+  req.body.visits.push(date);
   User.create(req.body, function(err, user) {
     console.log("req.body ",req.body)
     if(err) return res.status(400).json({
       message: "Oops those details can't be registered",
       err});
-
+    jarCreate.create(req, res, user);
     var payload = { _id: user._id, firstName: user.firstName, lastName: user.lastName, primaryJarId: user.primaryJarId };
     var token = jwt.sign(payload, secret, { expiresIn: 60*60*2 });
     return res.status(200).json({

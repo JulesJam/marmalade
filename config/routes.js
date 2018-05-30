@@ -6,9 +6,10 @@ var jwt = require('jsonwebtoken');
 var secret = process.env.MARMALADE_API_SECRET;
 var upload = require('./upload');
 
-var usersController = require('../controllers/users');
-var authController = require('../controllers/authentications');
+var usersController = require('../controllers/usersController');
+var authController = require('../controllers/authenticationsController');
 var locationsController = require('../controllers/locationsController');
+var jarsController = require('../controllers/jarsController')
 
 function secureRoute(req, res, next){
   console.log("Secure route activated req body",req.body);
@@ -32,8 +33,7 @@ function secureRoute(req, res, next){
 
 router.route('/users')
   .all(secureRoute)
-  .get(usersController.index)
-  .post(usersController.create);
+  .get(usersController.index);
 
 router.route('/users/:id')
   .all(secureRoute)

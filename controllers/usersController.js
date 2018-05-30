@@ -1,6 +1,7 @@
 var User = require('../models/user');
 
 
+
 function usersIndex(req, res) {
   User.find(function(err, users) {
     if(err) return res.status(500).json(err);
@@ -8,12 +9,7 @@ function usersIndex(req, res) {
   });
 }
 
-function usersCreate(req, res) {
-  User.create(req.body, function(err, user) {
-    if(err) return res.status(400).json(err);
-    return res.status(201).json(user);
-  });
-}
+
 
 function usersShow(req, res) {
   User.findById(req.params.id, function(err, user) {
@@ -39,7 +35,6 @@ function usersDelete(req, res) {
 
 module.exports = {
   index: usersIndex,
-  create: usersCreate,
   show: usersShow,
   update: usersUpdate,
   delete: usersDelete
