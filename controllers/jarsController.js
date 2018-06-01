@@ -1,17 +1,13 @@
 var Jar = require("../models/jar");
 var User = require('../models/user')
 
-function jarsCreate(req, res, user) {
-  newJar = new Jar();
-  newJar.jarName = req.body.jarName;
-  newJar.creatorId = user._id;
-  newJar.members.push(user._id);
-
-  Jar.create(newJar, function(err, jar){
+function jarsCreate(req, res) {
+  Jar.create(req.body, function(jar, err){
     if (err) return res.status(500).json({ success: false, message: err});
     if (!jar) return res.status(500).json({ success: false, message: "Please provide a jar" });
     console.log("newJar",newJar);
     console.log("jar",jar);
+    return res.status(200).json({jar})
     
   });
 }
@@ -23,7 +19,7 @@ function jarsIndex(req,res){
   Jar.find(query, function(err, jar){
     if (err) return res.status(500).json({ success: false, message: err});
     if (!jar) return res.status(500).json({ success: false, message: "No Jars Found" });
-    return res.status(200).json({ jar : jar});
+    return res.status(200).json({ jars});
   })
 }
 

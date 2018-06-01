@@ -3,6 +3,18 @@ var bcrypt = require('bcrypt');
 var jwt = require('jsonwebtoken');
 var beautifulUnique = require('mongoose-beautiful-unique-validation');
 
+var jarMembership = new mongoose.Schema ({
+  jarId: {
+    type: mongoose.Schema.ObjectId,
+    ref: "Jar_id",
+    required: true
+  },
+  membershipLevel: {
+    type: Number,
+    required: true
+  }
+})
+
 var userSchema = new mongoose.Schema({
   email:{
   type: String,
@@ -41,15 +53,13 @@ var userSchema = new mongoose.Schema({
   },
   jarOwnerJarId: {
     type: mongoose.Schema.ObjectId,
-    ref: "Jar"
+    ref: "Jar",
   },
   primaryJarId: {
-    type: mongoose.Schema.ObjectId,
-    ref: "Jar"
+    type: jarMembership
   },
   jarMemberships: [{
-    type: mongoose.Schema.ObjectId,
-    ref: "Jar"
+    type: jarMembership
   }],
   isActivated: {
     type: Boolean,

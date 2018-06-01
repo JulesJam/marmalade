@@ -11,6 +11,9 @@ var bodyParser  = require('body-parser');
 var cors        = require('cors');
 var mongoose    = require('mongoose');
 var routes      = require('./config/routes');
+var bluebird    = require('bluebird');
+
+
 
 require('./models/db');
 require('./config/passport');
@@ -18,7 +21,9 @@ require('./config/passport');
 
 
 var routesApi   = require('./models/db');
-//Chnage from photoframeAPI
+
+mongoose.Promise = bluebird;
+
 
 
 
