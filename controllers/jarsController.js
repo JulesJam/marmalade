@@ -1,5 +1,5 @@
 var Jar = require("../models/jar");
-var User = require('../models/user')
+var User = require('../models/user');
 
 function jarsCreate(req, res) {
   Jar.create(req.body, function(jar, err){

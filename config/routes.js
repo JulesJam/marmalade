@@ -9,7 +9,9 @@ var upload = require('./upload');
 var usersController = require('../controllers/usersController');
 var authController = require('../controllers/authenticationsController');
 var locationsController = require('../controllers/locationsController');
-var jarsController = require('../controllers/jarsController')
+var jarsController = require('../controllers/jarsController');
+var invitationsController = require('../controllers/invitationsController');
+
 
 function secureRoute(req, res, next){
   console.log("Secure route activated req body",req.body);
@@ -55,6 +57,18 @@ router.route('/locations/:id')
   .put(locationsController.update)
   .patch(locationsController.update)
   .delete(locationsController.delete);
+
+  router.route('/invitations')
+    .all(secureRoute)
+    .post(invitationsController.create)
+    .get(invitationsController.index);
+
+  router.route('/invitations/:id')
+    .get(invitationsController.show)
+    .put(invitationsController.update)
+    .patch(invitationsController.update)
+    .delete(invitationsController.delete);
+
 
 
 module.exports = router;
