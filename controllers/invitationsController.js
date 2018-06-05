@@ -3,10 +3,11 @@ var Invitation = require("../models/invitation");
 var User = require('../models/user');
 
 function invitationsCreate(req, res) {
-  Invitation.create(req.body, function(invitation, err){
+  Invitation.create(req.body, function(err, invitation){
+    console.log("Api receiving invitation ", req.body)
     if (err) return res.status(500).json({ success: false, message: err});
     if (!invitation) return res.status(500).json({ success: false, message: "Please provide a invitation" });
-    console.log("newInvitation",newInvitation);
+    
     console.log("invitation",invitation);
     return res.status(200).json({invitation})
     
