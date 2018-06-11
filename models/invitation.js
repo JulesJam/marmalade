@@ -5,6 +5,7 @@ var invitationSchema = mongoose.Schema({
   jarId: { type: mongoose.Schema.ObjectId, ref: "Jar", required: true },
   recipientEmailAddress: { type: String, required: true, require: true},
   senderMembershipLevel: { type: Number},
+  branchCode: { type: String, /*required: true,*/ default: ''},
   emailSentDate: {type: Date, default: Date.now },
   reminderSentDate: [{ type: Date }],
   acceptedDate: { type: Date},

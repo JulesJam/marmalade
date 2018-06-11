@@ -12,6 +12,10 @@ var jarMembership = new mongoose.Schema ({
   membershipLevel: {
     type: Number,
     required: true
+  },
+  branchCode: {
+    type: String,
+    default: ''
   }
 })
 

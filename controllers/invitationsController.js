@@ -6,7 +6,7 @@ function invitationsCreate(req, res) {
   Invitation.create(req.body, function(err, invitation){
     console.log("Api receiving invitation ", req.body)
     if (err) return res.status(500).json({ success: false, message: err});
-    if (!invitation) return res.status(500).json({ success: false, message: "Please provide a invitation" });
+    if (!invitation) return res.status(500).json({ success: false, message: "Please provide an invitation" });
     
     console.log("invitation",invitation);
     return res.status(200).json({invitation})
