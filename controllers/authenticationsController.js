@@ -26,7 +26,8 @@ function register(req, res) {
       newJar.jarName = req.body.jarName;
       newJar.creatorId = user._id;
       newJar.members.push(user._id);
-      newJar.treeManager=[{branchCode: '0', members: user._id}];
+      newJar.childCodeTracker = null;
+      newJar.treeManager=[{branchCode: [0], members: user._id}];
       console.log("Jar creation stage 1 req.body", newJar);
       createJarAndAddUser(newJar, user, res);
     } 
@@ -41,18 +42,23 @@ function register(req, res) {
 
 
 function createJarAndAddUser (newJar, user, res){
+  console.log("newJar being passed is >>>>", newJar)
     Jar.create(newJar, (function(err, jar){
       if (jar){
         console.log("jar created is ",jar);
         User.findById(user._id,function(err, user) {
-            console.log("stage 3 user ",user._id, "error ", err, "user ? ", user)
+            console.log("stage 3 user ",user._id, "error ", err, "user ? ", user, "Jar", jar)
             if(err){
               return res.status(400).json(err);
             } else {
               user.primaryJarId = {jarId: jar._id,
-                                  membershipLevel: 0};
+                                  membershipLevel: 0,
+                                  branchCode: [0],
+                                  childCode: [0]};
               user.jarMemberships = [{jarId: jar._id,
-                                  membershipLevel: 0, branchCode: ''}];
+                                  membershipLevel: 0,
+                                  branchCode: [0],
+                                  childCode: null}];
               user.jarOwnerJarId = jar._id;
               User.update ({_id: user._id}, user, function(err, updatedUser){
                 if(err){
@@ -89,13 +95,18 @@ function findInviteAndUpdateJarAndUser (user, res){
 }
 
 function buildToken(user, jar, res){
+  console.log("Token Builder +++++ ", jar.jarName);
+  var jarMemberShip = {
+    jarId: user.primaryJarId.jarId,
+    membershipLevel: user.primaryJarId.membershipLevel,
+    branchCode: user.primaryJarId.branchCode,
+    childCode: user.primaryJarId.childCode
+  }
   var payload = { 
     _id: user._id,
     firstName: user.firstName,
-    lastName:   user.lastName,
-    primaryJarId: user.primaryJarId.jarId,
-    primaryJarMembershipLevel: user.primaryJarId.membershipLevel,
-    primaryJarBranchCode: user.primaryJarId.branchCode,
+    lastName:  user.lastName,
+    primaryJarId: jarMemberShip,
     jarOwnerJarId: user.jarOwnerJarId,
     jarName: jar.jarName 
   };

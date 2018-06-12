@@ -25,14 +25,15 @@ passport.use(new LocalStrategy({
           return done(null, false, "There is an error with jar linking");
         } else if (jar){
             var payload = { 
-              _id: user._id,
-              firstName: user.firstName,
-              lastName:   user.lastName,
-              primaryJarId: user.primaryJarId.jarId,
-              primaryJarMembershipLevel: user.primaryJarId.membershipLevel,
-              primaryJarBranchCode: user.primaryJarId.branchCode,
-              jarOwnerJarId: user.jarOwnerJarId,
-              jarName: jar.jarName 
+            _id: user._id,
+            firstName: user.firstName,
+            lastName:  user.lastName,
+            primaryJarId: user.primaryJarId.jarId,
+            primaryJarMembershipLevel: user.primaryJarId.membershipLevel,
+            primaryJarBranchCode: user.primaryJarId.branchCode,
+            primaryJarChildCode: user.primaryJArId.childCode,
+            jarOwnerJarId: user.jarOwnerJarId,
+            jarName: jar.jarName 
             };
 
              var token = jwt.sign(payload, secret, { expiresIn: 60*60*2 });
