@@ -14,17 +14,20 @@ var invitationsController = require('../controllers/invitationsController');
 
 
 function secureRoute(req, res, next){
-  console.log("Secure route activated req body",req.body);
+  console.log("Secure route activated req body",req.headers.authorization);
   if(!req.headers.authorization)
     return res.status(401).json({
       message: "Unauthorised"
     });
   var token = req.headers.authorization.replace('Bearer ', '');
-
+  console.log("the token is ",token);
   jwt.verify(token, secret, function(err, payload){
-    if(err|| !payload) return res.status(401).json({
-      message: "Unauthorised - not logged in server responded " + err
-    });
+    if(err|| !payload) {
+      console.log("The token error is", err, "the payload is ", payload);
+      return res.status(401).json({
+        message: "Unauthorised - not logged in server responded " + err
+      });
+    }
     
     req.user = payload;
     next();

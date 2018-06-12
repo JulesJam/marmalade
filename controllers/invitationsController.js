@@ -3,15 +3,39 @@ var Invitation = require("../models/invitation");
 var User = require('../models/user');
 
 function invitationsCreate(req, res) {
-  Invitation.create(req.body, function(err, invitation){
-    console.log("Api receiving invitation ", req.body)
-    if (err) return res.status(500).json({ success: false, message: err});
-    if (!invitation) return res.status(500).json({ success: false, message: "Please provide an invitation" });
-    
-    console.log("invitation",invitation);
-    return res.status(200).json({invitation})
-    
-  });
+  User.findById(req.body.senderId, function(err, user){
+    var message = "Triend to find user"+req.body.senderId;
+
+    if (err) return res.status(500).json({ success: false, message: message })
+    if (user){
+      /*newInvitation = new Invitation();
+        newInvitation.senderId = user._id;
+      newInvitation.jarId = user.primaryJarId.jarId;
+      newInvitation.recipientEmailAddress = req.body.recipientEmailAddress;
+      newInvitation.*/
+      newInvitation = {
+        senderId: req.body.senderId,
+        jarId: user.primaryJarId.jarId,
+        recipientEmailAddress: req.body.recipientEmailAddress,
+        recipientFirstName: req.body.recipientFirstName,
+        senderMembershipLevel: user.primaryJarId.membershipLevel,
+        senderBranchCode: user.primaryJarId.branchCode,
+        senderChildCode: user.primaryJarId.childCode,
+        emailSentDate: req.body.emailSentDate,
+        acceptedDate: null,
+        rejectDate: null,
+        status: 'Pending'
+      };
+      Invitation.create(newInvitation, function(err, invitation){
+        console.log("Api receiving invitation ", req.body)
+        if (err) return res.status(500).json({ success: false, message: err});
+        if (!invitation) return res.status(500).json({ success: false, message: "Please provide an invitation" });
+        
+        console.log("invitation",invitation);
+        return res.status(200).json({invitation})
+      });
+    }
+  })
 }
 
 function invitationsIndex(req,res){

@@ -24,26 +24,29 @@ passport.use(new LocalStrategy({
         if(!jar){
           return done(null, false, "There is an error with jar linking");
         } else if (jar){
+            var jarMemberShip = {
+              jarId: user.primaryJarId.jarId,
+              membershipLevel: user.primaryJarId.membershipLevel,
+              branchCode: user.primaryJarId.branchCode,
+              childCode: user.primaryJarId.childCode
+            }
             var payload = { 
-            _id: user._id,
-            firstName: user.firstName,
-            lastName:  user.lastName,
-            primaryJarId: user.primaryJarId.jarId,
-            primaryJarMembershipLevel: user.primaryJarId.membershipLevel,
-            primaryJarBranchCode: user.primaryJarId.branchCode,
-            primaryJarChildCode: user.primaryJArId.childCode,
-            jarOwnerJarId: user.jarOwnerJarId,
-            jarName: jar.jarName 
+              _id: user._id,
+              firstName: user.firstName,
+              lastName:  user.lastName,
+              primaryJarId: jarMemberShip,
+              jarOwnerJarId: user.jarOwnerJarId,
+              jarName: jar.jarName 
             };
 
-             var token = jwt.sign(payload, secret, { expiresIn: 60*60*2 });
-             console.log("Generating token...",token);
-             /*return res.status(200).json({
-               message: "Success",
-               token: token
-             });*/
-             return done(null, user, token
-              )
+            var token = jwt.sign(payload, secret, { expiresIn: 60*60*2 });
+            console.log("Generating token...",token);
+            /*return res.status(200).json({
+              message: "Success",
+              token: token
+            });*/
+            return done(null, user, token
+             )
           }
         })
       }
