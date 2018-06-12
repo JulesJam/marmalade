@@ -55,7 +55,7 @@ function createJarAndAddUser (newJar, user, res){
               user.primaryJarId = {jarId: jar._id,
                                   membershipLevel: 0,
                                   branchCode: [0],
-                                  childCode:    0};
+                                  childCode: null};
               user.jarMemberships = [{jarId: jar._id,
                                   membershipLevel: 0,
                                   branchCode: [0],
@@ -91,39 +91,61 @@ function findInviteAndUpdateJarAndUser (user, res){
         if(err){
           return res.status(400).json(err,{message: "The sender of this inviation could not be verified"})
         } else if (sender){
-          if(!sender.childCode){
-            Jar.findById(invitation.jarId, function(err, jar){
-              if(err){
-                return res.status(400).json(err,{message: "Invitation Jar Not Found"})
-              } else if(jar){
-                sender.childCode = jar.childCodeTracker + 1;
-                console.log("^^^^Yeah Invitation jar is found", jar,"jar.childCodeTracker ",jar.childCodeTracker," sender childcode",jar.treeManager[jar.childCodeTracker].branchCode);
-                user.membershipLevel = sender.primaryJarId.membershipLevel + 1;
-                jar.treeManager[jar.childCodeTracker].branchCode.push(sender.childCode);
-                console.log("+====+++++> updated jar tree manager ",jar.treeManager[jar.childCodeTracker].branchCode);
-                user.primaryJarId ={
-                  jarId: jar._id,
-                  membershipLevel: user.membershipLevel,
-                  branchCode: jar.treeManager[jar.childCodeTracker].branchCode,
-                  childCode: null}
+          console.log("lloking for jar using sender", sender);
+          Jar.findById(invitation.jarId, function(err, jar){
+            if(err){
+              return res.status(400).json(err,{message: "Invitation Jar Not Found"})
+            } else if(jar){
+               console.log("We have a jar>>>>???? ",jar, "and the sender is still ", sender);
+               if(!sender.primaryJarId.childCode){
+                 console.log("<<<>>><<<>>>primary child code ",sender.primaryJarId.childCode,"Jar child code", jar.childCodeTracker);
+                 jar.childCodeTracker +=1;
+                 sender.primaryJarId.childCode = jar.childCodeTracker
+                 User.update({_id: invitation.senderId}, sender, function(err, updatedSender){
+                   if(err){
+                     return res.status(500).json(err, {message: "The sender could not be updated with new childcode tracker"})
+                   } else {
+                     console.log("sender child code updated")
+                   }
+                 })
+               } else { 
+               console.log("so we skipped to beyond jar find");
+               sender.primaryJarId.childCode = jar.childCodeTracker
+               }
+               console.log("^^^^Yeah Invitation jar is found", jar,"jar.childCodeTracker ",jar.childCodeTracker," sender childcode",jar.treeManager[jar.childCodeTracker].branchCode);
 
-                user.jarMemberships = [{jarId: jar._id,
-                                    membershipLevel: user.membershipLevel,
-                                    branchCode: jar.treeManager[jar.childCodeTracker].branchCode,
-                                    childCode: null}];
-                User.update({_id: user._id}, user, function(err, updatedUser){
-                if(err){
-                  return res.status(400).json(err)
-                }else {
-                  console.log("updated user is ", user, "update", updatedUser);
-                 buildToken(user, jar, res);
-                }
-              })
-              }
-            })
-          } else{
-            return res.status(500).json(err,{message: "The user could not be updated"})
-          }
+               user.membershipLevel = sender.primaryJarId.membershipLevel + 1;
+               jar.treeManager[jar.childCodeTracker].branchCode.push(sender.primaryJarId.childCode);
+               console.log("+====+++++> updated jar tree manager ",jar.treeManager[jar.childCodeTracker].branchCode);
+               user.primaryJarId ={
+                 jarId: jar._id,
+                 membershipLevel: user.membershipLevel,
+                 branchCode: jar.treeManager[jar.childCodeTracker].branchCode,
+                 childCode: null}
+
+               user.jarMemberships = [{
+                 jarId: jar._id,
+                 membershipLevel: user.membershipLevel,
+                 branchCode: jar.treeManager[jar.childCodeTracker].branchCode,
+                 childCode: null}];
+               User.update({_id: user._id}, user, function(err, updatedUser){
+                 if(err){
+                   return res.status(400).json(err)
+                 }else {
+                   Jar.update({_id: invitation.jarId}, jar, function(err, updatedJar){
+                     if(err){
+                       return res.status(400).json(err, {message: "Jar Update failed after creating invited user"})
+                     } else {
+                       console.log("updated user is ", user, "update", updatedUser);
+                       buildToken(user, jar, res);
+                     }
+                   })
+                 }
+               })
+              
+            }
+          })
+
         } else {
           return res.status(500).json(err,{message: "The invitation could not be processed"})
         }
