@@ -2,7 +2,7 @@ var mongoose = require('mongoose');
 
 
 var treeManager = new mongoose.Schema({
-  branchCode: [{type: Number, required: true, default: ''}],
+  branchCode: [{type: Number, required: true}],
   members: [{ type: mongoose.Schema.ObjectId, ref: "User" }],
 });
 

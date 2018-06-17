@@ -48,6 +48,22 @@ function jarsDelete(req,res){
   })
 }
 
+function getChildCode(sender){
+  Jar.findById(sender.primaryJarId.jarId, function(err, jar){  
+    if (err) return res.status(500).json({ success: false, err: err, message: "Unable to get childcode for invitaion"});
+    if (jar){
+      jar.childCodeTracker +=1;
+      sender.jarMembership.branchCode.push(jar.childCodeTracker);
+      jar.treeManager.branchCode.push({branchCode:[sender.jarMembership.branchCode], members: []});
+      Jar.update(jarId, jar, function(err, jar){
+        if (err) return res.status(500).json({ success: false, err: err, message: "Unable to save new childcode for invitaion"})
+          return jar
+        
+      })
+    }
+  })
+}
+
 
 module.exports = {
   create: jarsCreate,

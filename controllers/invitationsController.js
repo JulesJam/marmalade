@@ -1,39 +1,36 @@
 var Invitation = require("../models/invitation");
 var Invitation = require("../models/invitation");
 var User = require('../models/user');
+var Jar = require('../models/jar');
 
 function invitationsCreate(req, res) {
-  User.findById(req.body.senderId, function(err, user){
+  User.findById(req.body.senderId, function(err, sender){
     var message = "Triend to find user"+req.body.senderId;
 
     if (err) return res.status(500).json({ success: false, message: message })
-    if (user){
-      /*newInvitation = new Invitation();
-        newInvitation.senderId = user._id;
-      newInvitation.jarId = user.primaryJarId.jarId;
-      newInvitation.recipientEmailAddress = req.body.recipientEmailAddress;
-      newInvitation.*/
-      newInvitation = {
-        senderId: req.body.senderId,
-        jarId: user.primaryJarId.jarId,
-        recipientEmailAddress: req.body.recipientEmailAddress,
-        recipientFirstName: req.body.recipientFirstName,
-        senderMembershipLevel: user.primaryJarId.membershipLevel,
-        senderBranchCode: user.primaryJarId.branchCode,
-        senderChildCode: user.primaryJarId.childCode,
-        emailSentDate: req.body.emailSentDate,
-        acceptedDate: null,
-        rejectDate: null,
-        status: 'Pending'
-      };
-      Invitation.create(newInvitation, function(err, invitation){
-        console.log("Api receiving invitation ", req.body)
-        if (err) return res.status(500).json({ success: false, message: err});
-        if (!invitation) return res.status(500).json({ success: false, message: "Please provide an invitation" });
-        
-        console.log("invitation",invitation);
-        return res.status(200).json({invitation})
-      });
+    if (sender){
+      if (!sender.primaryJarId.childCode){
+        getChildCode(sender, res)
+          .then(
+            (jar)=>{
+            Jar.findByIdAndUpdate({_id: jar._id}, jar, {new: true}, function(err, updatedJar){
+              console.log("updatedJar Found for invite @@@@@ ", updatedJar);
+              console.log("updatedJar childcode ", updatedJar.childCodeTracker/*, " sender branchcode ", sender.primaryJarId.branchCode*/);
+              sender.primaryJarId.childCode = updatedJar.childCodeTracker;
+              sender.primaryJarId.branchCode = updatedJar.treeManager[updatedJar.childCodeTracker].branchCode;
+              console.log("sender is now tracker 2", sender);
+              User.findByIdAndUpdate({_id: sender._id}, sender,{new: true}, function(err, sender){
+              if (err) return res.status(500).json({ success: false, err: err, message: "failed to update user new branch child code"});
+              if (sender){
+                finaliseNewInvitation(sender,req,res);
+              }
+              });
+            })
+          })
+        .catch(console.log("error handler should do this"))
+      } else {
+        finaliseNewInvitation(sender,req,res);
+      }
     }
   })
 }
@@ -73,6 +70,57 @@ function invitationsDelete(req,res){
     return res.status(204).send({message: "DELETED"});
   })
 }
+
+function getChildCode(sender, res){
+  return new Promise ((resolve, reject) =>{
+    console.log("tryig to get jar with Id .......",sender.primaryJarId.jarId)
+    Jar.findById(sender.primaryJarId.jarId, function(err, jar){  
+      if (err) return res.status(500).json({ success: false, err: err, message: "Unable to get childcode for invitaion"});
+      if (jar){
+        jar.childCodeTracker += 1;
+        console.log("NEW CHILDCODE TRACKER IS",jar.childCodeTracker)
+        sender.primaryJarId.branchCode.push(jar.childCodeTracker);
+        newBranch = {branchCode: sender.primaryJarId.branchCode , members: []}
+        console.log("JAR IS>>> ",jar,"trying to push ", jar.treeManager, "new branch",
+        newBranch )
+        jar.treeManager.push(newBranch);
+        console.log("new jar tree manager ----> ",jar.treeManager)
+        resolve(jar)
+      }
+      else{
+        reject (
+          console.log("oops something going wroong"))
+      }
+    })
+  })
+}
+
+function finaliseNewInvitation (sender, req, res){
+  newInvitation = {
+  senderId: req.body.senderId,
+  jarId: sender.primaryJarId.jarId,
+  recipientEmailAddress: req.body.recipientEmailAddress,
+  recipientFirstName: req.body.recipientFirstName,
+  invitationMembershipLevel: sender.primaryJarId.membershipLevel+1,
+  invitationBranchCode: sender.primaryJarId.branchCode,
+  invitationChildCode: sender.primaryJarId.childCode,
+  emailSentDate: req.body.emailSentDate,
+  acceptedDate: null,
+  rejectDate: null,
+  status: 'Pending'
+  };
+  Invitation.create(newInvitation, function(err, invitation){
+    console.log("Api receiving invitation ", newInvitation)
+    if (err) return res.status(500).json({ success: false, message: err});
+    if (!invitation) return res.status(500).json({ success: false, message: "Please provide an invitation" });
+    
+    console.log("invitation",invitation);
+    return res.status(200).json({invitation})
+  });
+
+}
+
+
 
 
 module.exports = {
