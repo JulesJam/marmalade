@@ -80,10 +80,18 @@ var userSchema = new mongoose.Schema({
     type: mongoose.Schema.ObjectId,
     ref: "User"
   }],
+  invitations:[{
+    type: mongoose.Schema.ObjectId,
+    ref: "Invitaion",
+    default:[]
+  }],
+  pendingInvitations:{
+    type: Number,
+    default: 0
+  },
   avatar: {
     type: String
   },
-
   createdAt: { type: Date, default:  Date.now},
   updatedAt: { type: Date, default: Date.now}
 });

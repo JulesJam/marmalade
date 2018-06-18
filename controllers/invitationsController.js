@@ -109,13 +109,35 @@ function finaliseNewInvitation (sender, req, res){
   rejectDate: null,
   status: 'Pending'
   };
+  console.log("Api receiving invitation ", newInvitation)
   Invitation.create(newInvitation, function(err, invitation){
-    console.log("Api receiving invitation ", newInvitation)
-    if (err) return res.status(500).json({ success: false, message: err});
+    console.log("Api saved invitation ", invitation)
+    if (err){
+      message = "Invitation failed to create"
+      return res.status(500).json({ success: false, err: err, message: message});
+    } 
     if (!invitation) return res.status(500).json({ success: false, message: "Please provide an invitation" });
+    Jar.findByIdAndUpdate(invitation.jarId, {$addToSet: {invitations: invitation._id}}, {new: true}, function(err, jar){
+      if(err){
+        message = "Invite failed to save to jar";
+        return res.status(500).json({ success: false, err: err, message: message});
+      } else {
+        User.findByIdAndUpdate(invitation.senderId,{
+          $addToSet: {invitations: invitation._id},
+          $inc: {pendingInvitations: 1 }
+          },
+          {new: true}, function(err, updatedUser){
+          if(err){
+            message = "Invite failed to update to user";
+            return res.status(500).json({ success: false, err: err, message: message});
+          } else {
+            console.log("invitation",invitation, "Jar has been updated to ", jar, "invite added to sender ", updatedUser);
+            return res.status(200).json({invitation})
+          } 
+        })
+      }
+    })
     
-    console.log("invitation",invitation);
-    return res.status(200).json({invitation})
   });
 
 }

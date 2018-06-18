@@ -126,19 +126,34 @@ function findInviteAndUpdateJarAndUser (newUser, res){
                   return res.status(400).json(err)
                 }else {
                   jar.treeManager[invitation.invitationChildCode].members.push(user._id);
+                  console.log("Jar BEFORE accept ", jar)
+                  jar.invitations = jar.invitations.filter(function(foundInvitation){
+                    if(!foundInvitation.equals(invitation._id)){
+                      return foundInvitation != invitation._id
+                    }
+                  });
+                  console.log("Jar invitations AFTER accept ", jar)
                   Jar.update({_id: invitation.jarId}, jar, function(err, updatedJar){
                     if(err){
                       return res.status(400).json(err, {message: "Jar Update failed after creating invited user"})
                     } else {
                       console.log("updated user is ", user, "updated Jar", updatedJar);
                       now = Date.now();
-                      Invitation.update({_id: invitation._id},{status: 'accepted', acceptedDate: now}, function(err, updatedInvitation){
+                      Invitation.findByIdAndUpdate({_id: invitation._id},{status: 'accepted', acceptedDate: now}, {new: true}, function(err, updatedInvitation){
                         if(err){
-                          return res.status(400).json(err, {message: "Jar Update failed after creating invited user"})
+                          message = "Jar Update failed after creating invited user"
+                          return res.status(400).json({err: err, message: message})
                         }
                         else{
-                          console.log("Invitation accepted", updatedInvitation)
-                          buildToken(user, jar, res);
+                          User.findByIdAndUpdate(updatedInvitation.senderId,{$inc: {pendingInvitations: -1}},{new: true},function(err, updatedSender){
+                            if(err){
+                              message = "Sender pending count not reduced"
+                              return res.status(400).json({err: err, message: message})
+                            } else {
+                              console.log("Invitation accepted", updatedInvitation, "Sender update ", updatedSender)
+                              buildToken(user, jar, res);
+                            }
+                          })
                         }
                       }) 
                     }

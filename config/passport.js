@@ -36,7 +36,8 @@ passport.use(new LocalStrategy({
               lastName:  user.lastName,
               primaryJarId: jarMemberShip,
               jarOwnerJarId: user.jarOwnerJarId,
-              jarName: jar.jarName 
+              jarName: jar.jarName,
+              pendingInvitations: user.pendingInvitations
             };
 
             var token = jwt.sign(payload, secret, { expiresIn: 60*60*2 });

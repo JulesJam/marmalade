@@ -13,7 +13,7 @@ var jarSchema = mongoose.Schema({
   jarName: { type: String, required: true, require: true},
   jarIcon: { type: String},
   members: [{ type: mongoose.Schema.ObjectId, ref: "User" }],
-  invites: [{ type: String }],
+  invitations: [{ type: mongoose.Schema.ObjectId, ref: "Invitation", default: [] }],
   locations: [{ type: String}],
   last_updated: {type: Date, default: Date.now }
 },{
