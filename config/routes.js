@@ -11,6 +11,7 @@ var authController = require('../controllers/authenticationsController');
 var locationsController = require('../controllers/locationsController');
 var jarsController = require('../controllers/jarsController');
 var invitationsController = require('../controllers/invitationsController');
+var entrysController = require('../controllers/entrysController')
 
 
 function secureRoute(req, res, next){
@@ -61,16 +62,25 @@ router.route('/locations/:id')
   .patch(locationsController.update)
   .delete(locationsController.delete);
 
-  router.route('/invitations')
-    .all(secureRoute)
-    .post(invitationsController.create)
-    .get(invitationsController.index);
+router.route('/entrys')
+  .all(secureRoute)
+  .post(upload.single('file'), entrysController.create)
+  .get(entrysController.index);
+router.route('/entrys/:id')
+  .get(entrysController.show)
+  .put(entrysController.update)
+  .patch(entrysController.update)
+  .delete(entrysController.delete);
 
-  router.route('/invitations/:id')
-    .get(invitationsController.show)
-    .put(invitationsController.update)
-    .patch(invitationsController.update)
-    .delete(invitationsController.delete);
+router.route('/invitations')
+  .all(secureRoute)
+  .post(invitationsController.create)
+  .get(invitationsController.index);
+router.route('/invitations/:id')
+  .get(invitationsController.show)
+  .put(invitationsController.update)
+  .patch(invitationsController.update)
+  .delete(invitationsController.delete);
 
 
 

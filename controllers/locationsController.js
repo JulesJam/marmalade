@@ -6,12 +6,9 @@ function locationsCreate(req, res) {
 
   newLocation = JSON.parse(req.body.location);
   console.log("File Key>>>>>>>>>>>",req.file);
-
   if (req.file && req.file.key){
       newLocation.locationMainImage = req.file.key
     }
-  
-
   Location.create(newLocation, function(err, location){
     if (err) return res.status(500).json({ success: false, message: err});
     if (!location) return res.status(500).json({ success: false, message: "Please provide a location" });
