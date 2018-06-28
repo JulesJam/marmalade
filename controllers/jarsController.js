@@ -24,15 +24,24 @@ function jarsIndex(req,res){
 }
 
 function jarsShow(req,res){
-  Jar.findById(req.params.id, function(err, jar){
+  console.log("looking for jar ", req.params.id);
+  Jar.findById(req.params.id)
+    .populate (
+      {path: 'jarLocations',
+      populate: {path: 'location'}
+    })
+    .then( function(jar, err){
     if (err) return res.status(500).json({ success: false, message: err});
     if (!jar) return res.status(500).json({ success: false, message: "No Jar Found" });
     return res.status(200).json({ jar : jar});
-  })
+    })
+    .catch(function(err) {
+      res.status(500).json(err);
+    });
 }
 
 function jarsUpdate(req,res){
-  Jar.findByIdAndUpdate(req.params.id, req.body, {new : true}, function(err, jar){
+  Jar.findByIdAndUpdate(req.params.id, req.body, {new : true}, function(jarr, err){
     if (err) return res.status(500).json({ success: false, message: err});
     if (!jar) return res.status(500).json({ success: false, message: "No Data to Update Found" });
     console.log("update just run ", req.body)
@@ -41,7 +50,7 @@ function jarsUpdate(req,res){
 }
 
 function jarsDelete(req,res){
-  Jar.findByIdAndRemove(req.params.id, function(err, jar){
+  Jar.findByIdAndRemove(req.params.id, function(jar, err){
     if(err) return res.status(500).json(err);
     if(!jar) return res.status(500).json({ sucess: false, message: "Jar does not exist cannot delete"})
     return res.status(204).send({message: "DELETED"});
@@ -49,7 +58,7 @@ function jarsDelete(req,res){
 }
 
 function getChildCode(sender){
-  Jar.findById(sender.primaryJarId.jarId, function(err, jar){  
+  Jar.findById(sender.primaryJarId.jarId, function(jar, err){  
     if (err) return res.status(500).json({ success: false, err: err, message: "Unable to get childcode for invitaion"});
     if (jar){
       jar.childCodeTracker +=1;

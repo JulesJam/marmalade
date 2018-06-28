@@ -11,8 +11,8 @@ var authController = require('../controllers/authenticationsController');
 var locationsController = require('../controllers/locationsController');
 var jarsController = require('../controllers/jarsController');
 var invitationsController = require('../controllers/invitationsController');
-var entrysController = require('../controllers/entrysController')
-
+var jarLocationsController = require('../controllers/jarLocationsController');
+var userLocationsController = require('../controllers/userLocationsController')
 
 function secureRoute(req, res, next){
   console.log("Secure route activated req body",req.headers.authorization);
@@ -62,15 +62,37 @@ router.route('/locations/:id')
   .patch(locationsController.update)
   .delete(locationsController.delete);
 
-router.route('/entrys')
+router.route('/jarLocations')
   .all(secureRoute)
-  .post(upload.single('file'), entrysController.create)
-  .get(entrysController.index);
-router.route('/entrys/:id')
-  .get(entrysController.show)
-  .put(entrysController.update)
-  .patch(entrysController.update)
-  .delete(entrysController.delete);
+  .post(upload.single('file'), jarLocationsController.create)
+  .get(jarLocationsController.index);
+router.route('/jarLocations/:id')
+  .get(jarLocationsController.show)
+  .put(jarLocationsController.update)
+  .patch(jarLocationsController.update)
+  .delete(jarLocationsController.delete);
+
+  router.route('/jar')
+    .all(secureRoute)
+    .get(jarsController.index);
+  router.route('/jar/:id')
+    .get(jarsController.show)
+    .put(jarsController.update)
+    .patch(jarsController.update)
+    .delete(jarsController.delete);
+
+
+
+
+router.route('/userLocations')
+  .all(secureRoute)
+  .post(upload.single('file'), userLocationsController.create)
+  .get(userLocationsController.index);
+router.route('/userLocations/:id')
+  .get(userLocationsController.show)
+  .put(userLocationsController.update)
+  .patch(userLocationsController.update)
+  .delete(userLocationsController.delete);
 
 router.route('/invitations')
   .all(secureRoute)

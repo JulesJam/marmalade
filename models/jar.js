@@ -14,8 +14,10 @@ var jarSchema = mongoose.Schema({
   jarIcon: { type: String},
   members: [{ type: mongoose.Schema.ObjectId, ref: "User" }],
   invitations: [{ type: mongoose.Schema.ObjectId, ref: "Invitation", default: [] }],
-  locations: [{ type: String}],
-  last_updated: {type: Date, default: Date.now }
+  jarLocations: [{type: mongoose.Schema.ObjectId, ref: "JarLocation"}],
+  last_updated: {type: Date, default: Date.now },
+  countOfRecommendtaions: {type: Number, default: 0},
+  countOfWishlists: {type: Number, defualt: 0}
 },{
 
   timestamps: true

@@ -1,5 +1,7 @@
 var mongoose = require('mongoose');
 
+
+
 var locationSchema = mongoose.Schema({
   creatorId: { type: mongoose.Schema.ObjectId, ref: "User", /*required: true */},
   locationName: { type: String, /*required: true*/},
@@ -7,8 +9,7 @@ var locationSchema = mongoose.Schema({
   locationAddress: { type: String },
   locationMainTelephone: { type: String },
   locationPostcode: { type: String},
-  latitude: { type: Number},
-  longitude: { type: Number },
+  coordinates: [{type: Number}],
   locationCountry: { type: String},
   website: {type: String},
   googlePlacesId: {type: String},
@@ -16,19 +17,19 @@ var locationSchema = mongoose.Schema({
   googlePlaceType: {type: String},
   officialDescription: { type: String},
   dateAdded: { type: Date, default: Date.now},
-  pictures: [{ type: String, required: true }],
+  authorisedImage: { type: String},
+  authorisedSubImages: [{ type: String, default: [] }],
   locationMainImage: {type: String},
-  locationType: {type: String},
-  entryType: {type: String},//Restaurant coffee Shop etc
-  lat: { type: String},
-  long:{ type: String},
-  active:{ type: Boolean, default: true},
-  votes:{type: Number, default: 1}
+  views: [{type: Date, default: Date.now}],
+  active:{ type: Boolean, default: true},//this will remove from all jars if admin needs to remove
+  votes:{type: Number, default: 1},
+  jars: [{type: mongoose.Schema.ObjectId, ref: "Jar", default: []}]//aggregate across all jars but don't use yet
 },{
 
   timestamps: true
 
 });
+
 
 locationSchema.set('toJSON', { getters: true, virtuals: false});
 

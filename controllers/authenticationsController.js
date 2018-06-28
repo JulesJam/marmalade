@@ -9,6 +9,7 @@ var secret = process.env.MARMALADE_API_SECRET;
 function register(req, res) {
   var date = Date.now();
   //change this so that if there is an invite code the user is not created until the invite is processed?
+  console.log("Checking for invite ", req.body.inviteCode," or Jar ", req.body.jarName)
   req.body.visits.push(date);
   if (!req.body.inviteCode){
     User.create(req.body, function(err, user) {
@@ -83,28 +84,32 @@ function createJarAndAddUser (newJar, user, res){
 
 function findInviteAndUpdateJarAndUser (newUser, res){
   Invitation.findById(newUser.inviteCode, function(err, invitation){
-    if(err){
-      message = "Oops that inviation can't be found " + err
+    if(err || !invitation){
+      message = "Oops that invitation can't be found please ask the sender to create a new invitation or "
       return res.status(400).json({err: err, message: message})
-    } else if (invitation && invitation.status != "Pending" ){
-      message = "Oops that inviation is no longer valid - please ask your friend to re-invite you " + err
+    } else if (invitation && invitation.status != "Pending"){
+      message = "Oops that inviation is no longer valid - please ask your friend to re-invite you "
       return res.status(400).json({err: err, message: message})
-    } else
-
+    } else if (invitation && !invitation.jarId  ){
+      message = "Oops that inviation has errors - please ask your friend to re-invite you "
+      return res.status(400).json({err: err, message: message})
+    }
+      else
     {
       console.log("invitation found ", invitation);
       User.create(newUser, function(err, user){
         console.log("req.body - user ",newUser)
         if(err){
           console.log("stage 1 error", err);
-          message = "Oops those details can't be registered " + err
+          message = "Oops those details can't be registered for the following reason " + err
           return res.status(400).json({err: err,
               message: message });
         }
         else{
           Jar.findById(invitation.jarId, function(err, jar){
             if(err){
-              return res.status(400).json(err,{message: "Invitation Jar Not Found"})
+              message = "Invitation Jar Not Found"
+              return res.status(400).json({err: err, message: message })
             } else if(jar){
               console.log("We have a jar>>>>???? ",jar);
                 
