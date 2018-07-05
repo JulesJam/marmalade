@@ -9,7 +9,6 @@
   "author": "Julian Wyatt",
   "license": "ISC",
   "dependencies": {
-    "@sendgrid/mail": "^6.3.1",
     "aws-sdk": "^2.249.1",
     "bcrypt": "^1.0.3",
     "bluebird": "^3.5.1",
