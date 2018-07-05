@@ -9,9 +9,10 @@ var secret = process.env.MARMALADE_API_SECRET;
 function register(req, res) {
   var date = Date.now();
   //change this so that if there is an invite code the user is not created until the invite is processed?
-  console.log("Checking for invite ", req.body.inviteCode," or Jar ", req.body.jarName)
+  console.log("Checking for invite ", req.body.inviteCode," or Jar ", req.body.jarName);
   req.body.visits.push(date);
   if (!req.body.inviteCode){
+    console.log("trying to register step 1");
     User.create(req.body, function(err, user) {
       console.log("req.body - user ",req.body)
       if(err){
