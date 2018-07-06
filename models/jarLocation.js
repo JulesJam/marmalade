@@ -11,6 +11,8 @@ var jarLocationSchema = mongoose.Schema({
   tags: [{ type: String}],//can be added to by all users
   votes:{type: Number, default: 1},// this is votes at jar level
   views:[{type: Date, default: []}],
+  //Eventually entry type should move to user
+  entryType:{type: String},
   searchType: {type: String},
   verifiedDate:{type: Date},
   verifiedByUserId: { type: mongoose.Schema.ObjectId, ref: "User"},

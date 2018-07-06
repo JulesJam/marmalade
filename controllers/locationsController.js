@@ -40,7 +40,7 @@ function locationsCreate(req, res) {
         //will need to check if it is associated with the user
         return res.status(200).json({success: false, message: message, location: locations[0]})
         } else {
-          //add it to teh jar
+          //adding exisiting locatio to the users jar
         console.log("need to add to jar");
         //first add location to the jar then add jarLocation
         var newJarLocation = new JarLocation();
@@ -57,7 +57,7 @@ function locationsCreate(req, res) {
         //searchtye indicates whether person was near location when adding it
         newJarLocation.searchType = receivedLocation.searchType;
         newJarLocation.entryType = receivedLocation.entryType;
-        if(receivedLocation.entryType == "Wishlist"){
+        if(receivedLocation.entryType === "Wishlist"){
           newJarLocation.source = receivedLocation.source
           }
         else {
@@ -75,6 +75,7 @@ function locationsCreate(req, res) {
             message = "Jarlocation was not created"
             return res.status(500).json({ success: false, message: message })
           }
+          console.log("New Jar Location Created for ", req.user.firstName, " >>", newJarLocation);
 
           Jar.findByIdAndUpdate(req.user.primaryJarId.jarId, {$push:{'jarLocations': jarLocation._id}}, {new: true}, function(err, updatedJar){
               if (err) {
@@ -85,6 +86,8 @@ function locationsCreate(req, res) {
                 message = "Jar was not added to jarlocation"
                 return res.status(500).json({ success: false, message: message })
               };
+
+              console.log("Jar Updated for new JarLocation");
               Location.findByIdAndUpdate(locations[0]._id, {$push:{'jars': updatedJar._id}}, {new: true}, function(err,updatedLocation){
                 if(err){
                   message="Location did not have new jard details added";
@@ -104,6 +107,8 @@ function locationsCreate(req, res) {
       }
     
     } else {
+
+      //creating a completely new location
       User.findById(receivedLocation.creatorId, function(err, user){
         if(err || !user){
           message = "Unable to locate user who created location ";
