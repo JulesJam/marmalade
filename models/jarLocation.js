@@ -14,7 +14,6 @@ var jarLocationSchema = mongoose.Schema({
   searchType: {type: String},
   verifiedDate:{type: Date},
   verifiedByUserId: { type: mongoose.Schema.ObjectId, ref: "User"},
-  entryType:{type: String},
   source: {type: String},
   upVotedBy:[{type: mongoose.Schema.ObjectId, ref: "User"}],
   downVotedBy:[{type: mongoose.Schema.ObjectId, ref: "User"}],

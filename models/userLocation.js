@@ -6,7 +6,6 @@ var userLocationSchema = mongoose.Schema({
   jarLocationId: {type: mongoose.Schema.ObjectId, ref: "Jar"},
   comments: [{ type: String, default: []}],//this is the user comment only seen by that user multiple comments allowed for revisits
   entryType: {type: String }, //wishlist or recommendation  
-  source: {type: String},
   userTags: [{ type: String, default: []}],
   views:[{type: Date, default: []}],
   upVoted: {type: Boolean, deafult: false},

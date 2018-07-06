@@ -20,7 +20,9 @@ var locationSchema = mongoose.Schema({
   authorisedImage: { type: String},
   authorisedSubImages: [{ type: String, default: [] }],
   locationMainImage: {type: String},
-  views: [{type: Date, default: Date.now}],
+  timesViewed: [{type: Date, default: Date.now}],
+  lat: { type: String},
+  long:{ type: String},
   active:{ type: Boolean, default: true},//this will remove from all jars if admin needs to remove
   votes:{type: Number, default: 1},
   jars: [{type: mongoose.Schema.ObjectId, ref: "Jar", default: []}]//aggregate across all jars but don't use yet

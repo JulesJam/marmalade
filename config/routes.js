@@ -38,11 +38,11 @@ function secureRoute(req, res, next){
 
 
 router.route('/users')
-  /*.all(secureRoute)*/
+  .all(secureRoute)
   .get(usersController.index);
 
 router.route('/users/:id')
-  /*.all(secureRoute)*/
+  .all(secureRoute)
   .get(usersController.show)
   .put(usersController.update)
   .patch(usersController.update)
@@ -52,7 +52,7 @@ router.post('/register', authController.register);
 router.post('/login', authController.login);
 
 router.route('/locations')
-  /*.all(secureRoute)*/
+  .all(secureRoute)
   .post(upload.single('file'),locationsController.create)
   .get(locationsController.index);
 
@@ -63,7 +63,7 @@ router.route('/locations/:id')
   .delete(locationsController.delete);
 
 router.route('/jarLocations')
-  /*.all(secureRoute)*/
+  .all(secureRoute)
   .post(upload.single('file'), jarLocationsController.create)
   .get(jarLocationsController.index);
 router.route('/jarLocations/:id')
@@ -73,7 +73,7 @@ router.route('/jarLocations/:id')
   .delete(jarLocationsController.delete);
 
   router.route('/jar')
-    /*.all(secureRoute)*/
+    .all(secureRoute)
     .get(jarsController.index);
   router.route('/jar/:id')
     .get(jarsController.show)
@@ -85,7 +85,7 @@ router.route('/jarLocations/:id')
 
 
 router.route('/userLocations')
-  /*.all(secureRoute)*/
+  .all(secureRoute)
   .post(upload.single('file'), userLocationsController.create)
   .get(userLocationsController.index);
 router.route('/userLocations/:id')
@@ -95,7 +95,7 @@ router.route('/userLocations/:id')
   .delete(userLocationsController.delete);
 
 router.route('/invitations')
-  /*.all(secureRoute)*/
+  .all(secureRoute)
   .post(invitationsController.create)
   .get(invitationsController.index);
 router.route('/invitations/:id')

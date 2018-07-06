@@ -1,8 +1,7 @@
 var mongoose = require('mongoose');
 var gracefulShutdown;
-var databaseUrl =process.env.MONGOLAB_URI_MARMALADE /*
-
- /*'mongodb://localhost:27017/locations'*/
+var databaseUrl =process.env.MONGOLAB_URI_MARMALADE 
+/*|| 'mongodb://localhost:27017/locations'*/;
 
 mongoose.connect(databaseUrl, {
   useMongoClient: true
