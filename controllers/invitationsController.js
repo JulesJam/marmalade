@@ -2,6 +2,7 @@ var Invitation = require("../models/invitation");
 var Invitation = require("../models/invitation");
 var User = require('../models/user');
 var Jar = require('../models/jar');
+var email = require('../config/email');
 
 function invitationsCreate(req, res) {
   User.findById(req.body.senderId, function(err, sender){
@@ -132,6 +133,7 @@ function finaliseNewInvitation (sender, req, res){
             return res.status(500).json({ success: false, err: err, message: message});
           } else {
             console.log("invitation",invitation, "Jar has been updated to ", jar, "invite added to sender ", updatedUser);
+            email.send(newInvitation.recipientEmailAddress, "Your invitation code is "+invitation._id);
             return res.status(200).json({invitation})
           } 
         })
