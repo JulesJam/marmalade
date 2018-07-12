@@ -3,6 +3,7 @@ var Jar = require('../models/jar');
 var Invitation = require('../models/invitation');
 var jwt = require('jsonwebtoken');
 var passport = require('passport');
+var email = require('../config/email');
 
 var secret = process.env.MARMALADE_API_SECRET;
 
@@ -191,6 +192,7 @@ function buildToken(user, jar, res){
     jarOwnerJarId: user.jarOwnerJarId,
     jarName: jar.jarName 
   };
+  email.send('julian.wyatt@1xdconsulting.co.uk', 'julian.wyatt@tradescant.co.uk', "Someone just register on midnightmarmalade", "Hey! Someone just registered on midnight marmalade.");
 
   var token = jwt.sign(payload, secret, { expiresIn: 60*60*2 });
   return res.status(200).json({
