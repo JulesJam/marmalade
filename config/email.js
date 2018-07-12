@@ -13,11 +13,12 @@ var data = {
 
 
 
-function sendMessage(recipient, message){
+function sendMessage(recipient, copyTo, subject, message){
   var data = {
-    from: 'Excited User <julian@mg.midnightmarmala.de>',
+    from: 'Midnightmarmalade <julian@mg.midnightmarmala.de>',
     to: recipient,
-    subject: 'Invitation to MidnightMarmalade',
+    cc: copyTo,
+    subject: subject,
     text: message
   };
 mailgun.messages().send(data, function (error, body) {
