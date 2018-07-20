@@ -43,7 +43,7 @@ function invitationsIndex(req,res){
   Invitation.find(query, function(err, invitation){
     if (err) return res.status(500).json({ success: false, message: err});
     if (!invitation) return res.status(500).json({ success: false, message: "No invitations Found" });
-    return res.status(200).json({ invitations});
+    return res.status(200).json({invitations});
   })
 }
 
@@ -51,7 +51,9 @@ function invitationsShow(req,res){
   Invitation.findById(req.params.id, function(err, invitation){
     if (err) return res.status(500).json({ success: false, message: err});
     if (!invitation) return res.status(500).json({ success: false, message: "No Invitation Found" });
-    return res.status(200).json({ invitation : invitation});
+    console.log(invitation);
+    if (invitation.status === 'accepted') return res.status(200).json({success: false, message:"...someone has already accepted that invitation - please ask your friend to resend a new link"});
+    return res.status(200).json({invitation: invitation, success: true});
   })
 }
 
@@ -133,8 +135,8 @@ function finaliseNewInvitation (sender, req, res){
             return res.status(500).json({ success: false, err: err, message: message});
           } else {
             console.log("invitation",invitation, "Jar has been updated to ", jar, "invite added to sender ", updatedUser);
-            let mailMessage = "Dear "+newInvitation.recipientFirstName+",\r\n\r\nYour friend "+sender.firstName+" "+sender.lastName+" has asked us to send you this invitation from Midnightmarmalade. \r\n\r\nMidnightmarmalade is a cool new website for sharing your favourite places to stay, eat, drink or just visit.\r\n Midnightmarmalade is different because you have to be invited to join a recommendation group (or 'Jar' as we like to call them) which means the recommendations and reviews you see will be from your friends or people they know and are therefore more likely to be in-tune with you rather than just from random anonymous people. You may of-course invite your friends too.\r\n\r\n To join your friend's group just click this link to visit our registration page\r\n\r\n https://test.midnightmarmala.de/#/home/"+invitation._id+"\r\n\r\n We will only keep your details for 30 days from when this email was sent so if you have not signed up by then you will need to ask your friend to re-invite you. We will never share the email address to which this invitation was sent for any purpose.\r\n\r\n Kind regards Jules at Midnight marmalade";
-            let mailSubject = sender.firstName+" "+sender.lastName+"would like to invite you to a cool new place review site - Midnightmarmalade";
+            let mailMessage = "Dear "+newInvitation.recipientFirstName+",\r\n\r\nYour friend "+sender.firstName+" "+sender.lastName+" has asked us to send you this invitation from Midnightmarmalade. \r\n\r\nMidnightmarmalade is a cool new website for sharing your favourite places to stay, eat, drink or just visit.\r\n\r\n Midnightmarmalade is different because you have to be invited to join a recommendation group (or 'Jar' as we like to call them) which means the recommendations and reviews you see will be from your friends or people they know and are therefore more likely to be in-tune with you rather than just from random anonymous people. You may of-course invite your friends too.\r\n\r\n To join your friend's group just click this link to visit our registration page\r\n\r\n https://test.midnightmarmala.de/#/home/"+invitation._id+"\r\n\r\n We will only keep your details for 30 days from when this email was sent so if you have not signed up by then you will need to ask your friend to re-invite you. We will never share the email address to which this invitation was sent for any purpose.\r\n\r\n Kind regards\r\n\r\n Jules, from Midnight marmalade\r\n\r\n\r\n If you want to contact Midnightmarlade directly please email jules@midnightmarmala.de";
+            let mailSubject = sender.firstName+" "+sender.lastName+" would like to invite you to a cool new place review site - Midnightmarmala.de";
             email.send(newInvitation.recipientEmailAddress, sender.email, mailSubject, mailMessage);
             return res.status(200).json({invitation})
           } 

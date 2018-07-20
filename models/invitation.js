@@ -4,6 +4,7 @@ var invitationSchema = mongoose.Schema({
   senderId: { type: mongoose.Schema.ObjectId, ref: "User", required: true },
   jarId: { type: mongoose.Schema.ObjectId, ref: "Jar", required: true },
   recipientEmailAddress: { type: String, required: true, require: true},
+  recipientFirstName: { type: String },
   invitationMembershipLevel: { type: Number},
   invitationBranchCode: [{ type: Number, /*required: true,*/ }],
   invitationChildCode: { type: Number},

@@ -95,7 +95,7 @@ router.route('/userLocations/:id')
   .delete(userLocationsController.delete);
 
 router.route('/invitations')
-  .all(secureRoute)
+  /*.all(secureRoute)*/
   .post(invitationsController.create)
   .get(invitationsController.index);
 router.route('/invitations/:id')
