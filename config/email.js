@@ -14,13 +14,23 @@ var data = {
 
 
 function sendMessage(recipient, copyTo, subject, message){
+  console.log("CopyTo is ", copyTo);
+  if(copyTo){
   var data = {
     from: 'Midnightmarmalade <julian@mg.midnightmarmala.de>',
-    to: recipient,
+    to: 'julian.wyatt@me.com',
     cc: copyTo,
     subject: subject,
     text: message
   };
+  } else if (!copyTo){
+    var data = {
+      from: 'Midnightmarmalade <julian@mg.midnightmarmala.de>',
+      to: 'julian.wyatt@me.com',
+      subject: subject,
+      text: message
+    };
+  }
 mailgun.messages().send(data, function (error, body) {
   console.log(body);
 });

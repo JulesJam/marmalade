@@ -13,6 +13,8 @@ var jarsController = require('../controllers/jarsController');
 var invitationsController = require('../controllers/invitationsController');
 var jarLocationsController = require('../controllers/jarLocationsController');
 var userLocationsController = require('../controllers/userLocationsController')
+var userConfirmationController = require('../controllers/userConfirmationController')
+
 
 function secureRoute(req, res, next){
   console.log("Secure route activated req body",req.headers.authorization);

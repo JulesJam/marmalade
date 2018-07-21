@@ -1,5 +1,6 @@
 var User = require('../models/user');
 var Jar = require('../models/jar');
+var UserConfirmation = require('../models/userConfirmation');
 var Invitation = require('../models/invitation');
 var jwt = require('jsonwebtoken');
 var passport = require('passport');
@@ -112,8 +113,6 @@ function findInviteAndUpdateJarAndUser (newUser, res){
               message = "Invitation Jar Not Found"
               return res.status(400).json({err: err, message: message })
             } else if(jar){
-              console.log("We have a jar>>>>???? ",jar);
-                
               console.log("jar.childCodeTracker ",jar.childCodeTracker," sender childcode",jar.treeManager[jar.childCodeTracker]);
 
               user.membershipLevel = invitation.invitationMembershipLevel;
@@ -192,13 +191,31 @@ function buildToken(user, jar, res){
     jarOwnerJarId: user.jarOwnerJarId,
     jarName: jar.jarName 
   };
-  email.send('julian.wyatt@1xdconsulting.co.uk', 'julian.wyatt@tradescant.co.uk', "Someone just register on midnightmarmalade", "Hey! Someone just registered on midnight marmalade.");
-
-  var token = jwt.sign(payload, secret, { expiresIn: 60*60*2 });
-  return res.status(200).json({
-  message: "Success",
-  token: token
+  email.send('julian.wyatt@1xdconsulting.co.uk', null, "Someone just registered on midnightmarmalade", "Hey Julian!\r\n\r\n Someone just registered on midnight marmalade.");
+  var userConfirmation = new UserConfirmation();
+  userConfirmation.userId = user._id;
+  userConfirmation.userEmailAddress = user.email;
+  userConfirmation.emailSent = Date.now()
+  UserConfirmation.create(userConfirmation, function(err, confirmation){
+    if(err){
+      message = "UserConfirmation failed"
+      return res.status(500).json({err: err, message: message })
+    } else if (!confirmation){
+      message = "UserConfirmation failed"
+      return res.status(500).json({err: err, message: message })
+    } else {
+      console.log("User confirmation created ", confirmation);
+      var token = jwt.sign(payload, secret, { expiresIn: 60*60*2 });
+      email.send(user.email,null,'Complete your registration with MidnightMarmalade',"Hey "+user.firstName+",\r\n\r\nThanks for registering with MidnightMarmalade the coolest new review site!\r\n\r\nTo confirm membership for "+user.firstName+" "+user.lastName+" please click this link "+confirmation._id+" once clicked you will be able to log in and add your content, happy reviewing.\r\n\r\nThe Midnightmarmalade Team\r\n\r\nIf you didn't register for Midnightmaramalde please forward this email to julian@mg.midnightmarmala.de so that we can delete your email address from our system");
+      return res.status(200).json({
+      message: "Success",
+      token: token
+      })
+    }
   })
+
+
+
 };
 
 
