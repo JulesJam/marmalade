@@ -45,16 +45,18 @@ function usersConfirmationsDelete(req, res) {
 }
 
 function userConfirmationsAccept(req, res) {
+  console.log("looking for cnfirmtion");
   UserConfirmation.findById(req.params.id, function(err, userConfirmation){
-    if(err) return res.status(500).json({error: err, message: "There was an error retrieving that user confirmation record"});
-    if(!userConfirmation) return res.status(404).json({message: "The confirmation record could not be found"});
+    if(err) return res.status(500).json({success: false, error: err, message: "There was an error retrieving that user confirmation record"});
+    if(!userConfirmation) return res.status(404).json({success: false, message: "The confirmation record could not be found"});
     User.findByIdAndUpdate({_id: userConfirmation.userId},{isAvtivated: true}, {new: true}, function(err, updatedUser){
       var message = "Failed to find user with confirmation ID "+req.params.id;
-      if(err) return res.status(500).json({err: err, message: message});
-      if(!updatedUser) return res.status(404).json({err: err, message: message});
+      if(err) return res.status(500).json({success: false, err: err, message: message});
+      if(!updatedUser) return res.status(404).json({success: false, err: err, message: message});
         message = "Hey "+updatedUser.firstName+"\r\n\r\nThanks for confirming your email, now you are all set to add your new entries to your MidnightMarmalade jar, remember you can also now invite your friends to join the jar by using the send an invitation link.\r\n\r\nThe MidnightMarmalade Team";
       email.send(updatedUser.email, null, "Account verified", message);
-      return res.status(200).json({message: "Thanks you have validated your account and can now add content please log in", email: updatedUser.email})
+      message = "Thanks you have validated your account and can now add content please log in using "+updatedUser.email
+      return res.status(200).json({success: true, message: message})
     })
 
   });

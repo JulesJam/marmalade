@@ -106,7 +106,7 @@ router.route('/invitations/:id')
   .delete(secureRoute, invitationsController.delete);
 
 router.route('/userConfirmation/:id')
-  .post(userConfirmationsController.accept);
+  .get(userConfirmationsController.accept);
 
 
 
