@@ -13,7 +13,7 @@ var jarsController = require('../controllers/jarsController');
 var invitationsController = require('../controllers/invitationsController');
 var jarLocationsController = require('../controllers/jarLocationsController');
 var userLocationsController = require('../controllers/userLocationsController')
-var userConfirmationController = require('../controllers/userConfirmationController')
+var userConfirmationsController = require('../controllers/userConfirmationsController')
 
 
 function secureRoute(req, res, next){
@@ -97,14 +97,16 @@ router.route('/userLocations/:id')
   .delete(userLocationsController.delete);
 
 router.route('/invitations')
-  /*.all(secureRoute)*/
-  .post(invitationsController.create)
-  .get(invitationsController.index);
+  .post(secureRoute, invitationsController.create)
+  .get(secureRoute, invitationsController.index);
 router.route('/invitations/:id')
   .get(invitationsController.show)
-  .put(invitationsController.update)
-  .patch(invitationsController.update)
-  .delete(invitationsController.delete);
+  .put(secureRoute, invitationsController.update)
+  .patch(secureRoute, invitationsController.update)
+  .delete(secureRoute, invitationsController.delete);
+
+router.route('/userConfirmation/:id')
+  .post(userConfirmationsController.accept);
 
 
 

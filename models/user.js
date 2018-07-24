@@ -70,7 +70,7 @@ var userSchema = new mongoose.Schema({
   }],
   isActivated: {
     type: Boolean,
-    default: true
+    default: false
   },
   visits: [{
     type: Date,

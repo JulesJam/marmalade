@@ -204,9 +204,8 @@ function buildToken(user, jar, res){
       message = "UserConfirmation failed"
       return res.status(500).json({err: err, message: message })
     } else {
-      console.log("User confirmation created ", confirmation);
       var token = jwt.sign(payload, secret, { expiresIn: 60*60*2 });
-      email.send(user.email,null,'Complete your registration with MidnightMarmalade',"Hey "+user.firstName+",\r\n\r\nThanks for registering with MidnightMarmalade the coolest new review site!\r\n\r\nTo confirm membership for "+user.firstName+" "+user.lastName+" please click this link "+confirmation._id+" once clicked you will be able to log in and add your content, happy reviewing.\r\n\r\nThe Midnightmarmalade Team\r\n\r\nIf you didn't register for Midnightmaramalde please forward this email to julian@mg.midnightmarmala.de so that we can delete your email address from our system");
+      email.send(user.email,null,'Complete your registration with MidnightMarmalade',"Hey "+user.firstName+",\r\n\r\nThanks for registering with MidnightMarmalade the coolest new review site!\r\n\r\nTo confirm membership for "+user.firstName+" "+user.lastName+" please click this link https://midnightmarmala.de/userConfirmation/"+confirmation._id+" once clicked you will be able to log in and add your content, happy reviewing.\r\n\r\nThe Midnightmarmalade Team\r\n\r\nIf you didn't register for Midnightmaramalde please forward this email to julian@mg.midnightmarmala.de so that we can delete your email address from our system");
       return res.status(200).json({
       message: "Success",
       token: token
