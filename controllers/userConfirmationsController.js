@@ -54,7 +54,7 @@ function userConfirmationsAccept(req, res) {
       if(!updatedUser) return res.status(404).json({err: err, message: message});
         message = "Hey "+updatedUser.firstName+"\r\n\r\nThanks for confirming your email, now you are all set to add your new entries to your MidnightMarmalade jar, remember you can also now invite your friends to join the jar by using the send an invitation link.\r\n\r\nThe MidnightMarmalade Team";
       email.send(updatedUser.email, null, "Account verified", message);
-      return res.status(200).json({message: "Thanks you have validated your account and can now add content please log in"})
+      return res.status(200).json({message: "Thanks you have validated your account and can now add content please log in", email: updatedUser.email})
     })
 
   });
