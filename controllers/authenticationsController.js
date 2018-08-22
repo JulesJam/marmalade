@@ -12,7 +12,7 @@ function register(req, res) {
   var date = Date.now();
   //change this so that if there is an invite code the user is not created until the invite is processed?
   console.log("Checking for invite ", req.body.inviteCode," or Jar ", req.body.jarName)
-  req.body.visits.push(date);
+
   if (!req.body.inviteCode){
     User.create(req.body, function(err, user) {
       console.log("req.body - user ",req.body)
@@ -205,7 +205,7 @@ function buildToken(user, jar, res){
       return res.status(500).json({err: err, message: message })
     } else {
       var token = jwt.sign(payload, secret, { expiresIn: 60*60*2 });
-      email.send(user.email,null,'Complete your registration with MidnightMarmalade',"Hey "+user.firstName+",\r\n\r\nThanks for registering with MidnightMarmalade the coolest new review site!\r\n\r\nTo confirm membership for "+user.firstName+" "+user.lastName+" please click this link https://test.midnightmarmala.de/userConfirmation/"+confirmation._id+" once clicked you will be able to log in and add your content, happy reviewing.\r\n\r\nThe Midnightmarmalade Team\r\n\r\nIf you didn't register for Midnightmaramalde please forward this email to julian@mg.midnightmarmala.de so that we can delete your email address from our system");
+      email.send(user.email,null,'Complete your registration with MidnightMarmalade',"Hey "+user.firstName+",\r\n\r\nThanks for registering with MidnightMarmalade the coolest new review site!\r\n\r\nTo confirm membership for "+user.firstName+" "+user.lastName+" please click this link https://test.midnightmarmala.de/#/userConfirmation/"+confirmation._id+" once clicked you will be able to log in and add your content, happy reviewing.\r\n\r\nThe Midnightmarmalade Team\r\n\r\nIf you didn't register for Midnightmaramalde please forward this email to julian@mg.midnightmarmala.de so that we can delete your email address from our system");
       return res.status(200).json({
       message: "Success",
       token: token
@@ -220,7 +220,7 @@ function buildToken(user, jar, res){
 
 function login(req, res) {
 
-  passport.authenticate('local', function(err, user, token, message){
+  passport.authenticate('local', function(err, user, token /*,message*/){
    /* var token;*/
    console.log("message", token)
     // If Passport throws/catches an error

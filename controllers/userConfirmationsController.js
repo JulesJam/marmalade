@@ -2,7 +2,7 @@ var UserConfirmation = require('../models/userConfirmation');
 var User = require('../models/user');
 var email = require('../config/email');
 
-function usersConfirmationsCreate(req, res) {
+function userConfirmationsCreate(req, res) {
   UserConfirmation.create(req.body, function(jar, err){
     if (err) return res.status(500).json({ success: false, message: err});
     if (!jar) return res.status(500).json({ success: false, message: "Please provide user confirmation" });
@@ -13,7 +13,7 @@ function usersConfirmationsCreate(req, res) {
 }
 
 
-function usersConfirmationsIndex(req, res) {
+function userConfirmationsIndex(req, res) {
   UserConfirmation.find(function(err, users) {
     if(err) return res.status(500).json(err);
     return res.status(200).json(userConfirmations);
@@ -22,29 +22,29 @@ function usersConfirmationsIndex(req, res) {
 
 
 
-function usersConfirmationsShow(req, res) {
+/*function userConfirmationsShow(req, res) {
   UserConfirmation.findById(req.params.id, function(err, user) {
     if(err) return res.status(500).json(err);
     if(!user) return res.status(404).json({ message: "Could not find a user with that id" });
     return res.status(200).json(userConfirmation);
   });
 }
-
-function usersConfirmationsUpdate(req, res) {
+*/
+function userConfirmationsUpdate(req, res) {
   UserConfirmation.findByIdAndUpdate(req.params.id, req.body, { new: true, runValidators: true }, function(err, user) {
     if(err) return res.status(400).json(err);
     return res.status(200).json(userConfirmation);
   });
 }
 
-function usersConfirmationsDelete(req, res) {
+function userConfirmationsDelete(req, res) {
   UserConfirmation.findByIdAndRemove(req.params.id, function(err) {
     if(err) return res.status(500).json(err);
     return res.status(204).send();
   });
 }
 
-function userConfirmationsAccept(req, res) {
+function userConfirmationsShow(req, res) {
   console.log("looking for cnfirmtion");
   UserConfirmation.findById(req.params.id, function(err, userConfirmation){
     if(err) return res.status(500).json({success: false, error: err, message: "There was an error retrieving that user confirmation record"});
@@ -63,10 +63,10 @@ function userConfirmationsAccept(req, res) {
 }
 
 module.exports = {
-  create: usersConfirmationsCreate,
-  index: usersConfirmationsIndex,
-  show: usersConfirmationsShow,
-  update: usersConfirmationsUpdate,
-  delete: usersConfirmationsDelete,
-  accept: userConfirmationsAccept
+  create: userConfirmationsCreate,
+  index: userConfirmationsIndex,
+  show: userConfirmationsShow,
+  update: userConfirmationsUpdate,
+  delete: userConfirmationsDelete,
+ /* accept: userConfirmationsAccept*/
 }

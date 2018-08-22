@@ -12,15 +12,15 @@ passport.use(new LocalStrategy({
 
   function(username, password, done) {
   console.log("trying to use...", username);
-   User.findOne({ email: username}, function(err, user) {
-
-     if(err) res.send(500).json(err);
+   User.findOne({email: username}, function(err, user) {
+    
+     if(err) return res.send(500).json(err);
      if(!user || !user.validatePassword(/*req.body.*/password)) {
       return done(null, false, "User details not valid");
      } else if (user){
-
+      console.log("found user", user);
       Jar.findById(user.primaryJarId.jarId, function(err, jar){
-        if(err) res.send(500).json(err);
+        if(err) return res.send(500).json(err);
         if(!jar){
           return done(null, false, "There is an error with jar linking");
         } else if (jar){
