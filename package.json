@@ -9,7 +9,7 @@
   "author": "Julian Wyatt",
   "license": "ISC",
   "dependencies": {
-    "aws-sdk": "^2.284.1",
+    "aws-sdk": "^2.814.0",
     "bcryptjs": "^2.4.3",
     "bluebird": "^3.5.1",
     "body-parser": "^1.18.3",
