@@ -17,14 +17,14 @@
     "express": "^4.16.3",
     "jsonwebtoken": "^8.3.0",
     "mailgun-js": "^0.20.0",
-    "mongoose": "^4.13.14",
+    "mongoose": "^5.7.3",
     "mongoose-beautiful-unique-validation": "^7.1.1",
     "morgan": "^1.9.0",
     "multer": "^1.3.1",
     "multer-s3": "^2.7.0",
     "passport": "^0.4.0",
     "passport-local": "^1.0.0",
-    "sharp": "^0.20.5",
+    "sharp": "^0.33.0",
     "uuid": "^3.3.2"
   },
   "now": {
